@@ -195,3 +195,47 @@ populated `start_date` / `due_date` / `estimate_hours`. A copy is served at
   `Task GATE-02 is declared done but is blocked by: GATE-01`.
 - A non-admin calling `import_workspace` is refused; `mode: "sync"` is refused.
 - 28 Vitest unit tests cover the parser and the cycle detector.
+
+---
+
+## Phases 3–5 — Work surfaces, collaboration, visibility
+
+- **`@tanstack/react-table` pinned to v8.** v9 is what installs by default and
+  renames the whole API (`useTable` + `createCoreRowModel`). §1 names the
+  library, not a version; v8 is the API the rest of the ecosystem documents.
+- **`v_tasks.blocked_by_keys` lists only UNMET dependencies**, so it cannot
+  drive the task detail's "Blocked by" panel — a satisfied dependency would
+  vanish from the list. The panels are built from an explicit edge list
+  (`getDependencyEdges`) instead, with `blocked_by_keys` used only to highlight
+  which of them are still outstanding.
+- **`task_assignees` embeds must name their foreign key.** The table has two
+  FKs to `profiles` (`profile_id` and `assigned_by`); left ambiguous, PostgREST
+  rejects the query and every card silently renders as unassigned. The select
+  is `profiles!task_assignees_profile_id_fkey(...)`. Caught by e2e.
+- **Board droppable ids are `column:<status>` or `column:<status>:<lane>`.**
+  In swimlane mode the same status appears once per category, and dnd-kit
+  requires unique droppable ids.
+- **Blocked cards are not draggable at all**, rather than draggable-and-rejected.
+  The RPC error is still handled and surfaced verbatim, but as a backstop —
+  the normal experience is that the card does not move.
+- **`moveTask` calls `set_task_status` then `set_task_position`.** Position is
+  only written if the status change succeeded, so a refused drag leaves no
+  trace.
+- **Comments use a plain textarea with a mention picker**, the fallback §1
+  allows. Mentions are stored inline as `@[Display Name](uuid)`: the uuid keys
+  `comment_mentions` so the notification fires for the right person after a
+  rename, and the name keeps old comments readable.
+- **The side sheet fetches comments and activity client-side** into the
+  TanStack Query cache; `/tasks/[key]` server-renders the same components. The
+  sheet opens over an already-rendered board, so re-rendering the page for it
+  would be wasteful.
+- **`displayNames` lives in `lib/`, not beside the sheet.** A plain function
+  exported from a `'use client'` module reaches a Server Component as a client
+  reference, not as something callable — this crashed `/tasks/[key]` until it
+  moved. Caught by e2e.
+- **The critical path is the longest dependency chain**, computed by
+  longest-path over the DAG (`lib/graph.ts`). Chains of length 1 are not
+  highlighted — a lone task is not a path.
+- **Tracker's "push on these first" ranks blockers by how many blocked tasks
+  each is holding up**, which is the §7.2 requirement stated as a number rather
+  than a sort order.
