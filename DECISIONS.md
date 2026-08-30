@@ -239,3 +239,49 @@ populated `start_date` / `due_date` / `estimate_hours`. A copy is served at
 - **Tracker's "push on these first" ranks blockers by how many blocked tasks
   each is holding up**, which is the §7.2 requirement stated as a number rather
   than a sort order.
+
+---
+
+## Phase 6 — Hardening
+
+- **Dev login requires two independent conditions.** §8.4 asks for a
+  password-login flag for local work. `devLoginEnabled()` demands both
+  `NEXT_PUBLIC_DEV_LOGIN=true` _and_ a Supabase URL on localhost, so setting
+  the flag on a deployed app does nothing — a deployed app points at a hosted
+  Supabase.
+- **e2e seeds `auth.users` directly**, which needs two things that are easy to
+  miss: the token columns (`confirmation_token`, `recovery_token`,
+  `email_change_token_new`, `email_change`) must be `''` rather than NULL —
+  GoTrue scans them as non-null strings and every sign-in fails with "Database
+  error querying schema" — and each user needs an `auth.identities` row, whose
+  `email` column is generated and must not be inserted.
+- **The e2e suite talks to PostgREST directly for the authorization cases.**
+  Critical path 4 ("a member cannot mutate a task they are not assigned to") is
+  only meaningful against the API, not the UI, so those assertions bypass the
+  browser entirely — as does the check that a member's direct `PATCH /tasks`
+  matches zero rows.
+- **`pnpm test:e2e` needs the local stack** (`pnpm db:start`), Docker running,
+  and `NEXT_PUBLIC_SUPABASE_ANON_KEY` exported. The suite truncates and reseeds
+  the local database, so never point it at anything else.
+- **The board drag itself is not simulated in Playwright.** dnd-kit's pointer
+  sensor is unreliable to drive headlessly; the gate it enforces is asserted
+  three other ways instead — the card carries no drag listeners, the status
+  control's forward options are disabled, and the RPC refuses the move with the
+  blocker names.
+
+### Verification performed (§9, Phases 3–6 "done when")
+
+- 28 Vitest unit tests, 12 Playwright e2e tests, `pnpm build`, `pnpm lint` and
+  `pnpm typecheck` all pass.
+- e2e proves: an anonymous visitor is redirected to `/login`; a pending user is
+  held on `/pending`, is bounced from every data route, and reads zero rows
+  from `tasks`, `categories`, `v_tasks`, `task_activity` and
+  `task_dependencies` via PostgREST while still reading their own profile row;
+  a non-admin is bounced off `/admin/*`; a blocked card carries no drag
+  listeners and names its blocker; the status control's forward options are
+  disabled while blocked; `set_task_status` on a blocked task is refused with
+  "blocked by: BLOCK-01"; completing the blocker makes the move succeed, writes
+  a `status_changed` activity row with the right actor, renders it in the
+  timeline, and fans out a `task_unblocked` notification; a member cannot move
+  a task they are not assigned to; a member's direct `PATCH /tasks` updates
+  nothing.
