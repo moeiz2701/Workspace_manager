@@ -116,3 +116,82 @@ Against the local stack, with a task seeded as the table owner:
 - `started_at` / `completed_at` are set by trigger; the audit trail records
   actor and timestamp for every status change; `task_unblocked` notifications
   fan out when the last blocker completes.
+
+---
+
+## Phase 2 — Data in
+
+### The dependency gate had a hole on INSERT
+
+§4.1 puts the gate in a `BEFORE UPDATE` trigger, and §6.1 says "a status that
+violates the dependency gate is rejected by the trigger". It would not have
+been: `import_workspace` **inserts** tasks with their declared status in pass A
+and only wires up dependencies in pass D, so nothing fired. A file declaring
+`{"key":"BT-01","status":"done","depends_on":["ML-01"]}` would have created a
+task the board itself would refuse to produce.
+
+Fixed in two places, per §2 rule 3:
+
+- `import_workspace` re-checks the whole graph at the end of its transaction —
+  every task in a gated status with an unmet dependency, and every `done` parent
+  with an open child — and raises, aborting the import.
+- `planImport` performs the same check client-side so the admin sees which task
+  and which blockers before confirming.
+
+### Import
+
+- **`mode` accepts only `"upsert"`.** Both the Zod schema and the two RPCs
+  reject `"sync"` explicitly rather than ignoring it, so a file written for a
+  future version fails loudly instead of silently doing half of what it says.
+- **`runImport` re-plans server-side.** The dry run is a UI affordance; the
+  action never trusts a client claiming it passed.
+- **`preview_import` is a hand-written read-only twin**, as §6.3 anticipated.
+  It re-implements the reference checks in SQL rather than calling the real
+  function, because the pooler gives a Server Action no transaction to roll
+  back. It resolves references against both the database and the file being
+  previewed, so a task may reference a category the same file defines.
+- **`findCycles` uses Kahn's algorithm to isolate the residue, then a DFS to
+  extract a concrete chain.** Kahn alone says only _that_ a cycle exists. The
+  residue also contains nodes that merely lead into a cycle, so chains are
+  de-duplicated by their node set — otherwise `X → A, A → B, B → A` reports the
+  `A → B → A` cycle twice.
+- **JSON syntax errors are located in two ways.** V8 reports either
+  "… at position 42" or "… \"<snippet>\" is not valid JSON" with no position,
+  depending on the error and Node version. `describeJsonError` handles both so
+  the admin always gets a line number.
+- **Zod issue paths are humanised** to `tasks[3] (ML-01) → priority`, since
+  `tasks.3.priority` is useless for finding the line in a 37-task file.
+
+### Categories
+
+- **`reorderCategories` writes each position in its own statement.** A single
+  bulk upsert would need to send every column; positions are `(index+1)*1000`,
+  leaving room to insert between two rows later without a rewrite.
+- **Deleting a category with tasks is refused** with a readable message rather
+  than a raw foreign-key error — `tasks.category_id` is `ON DELETE RESTRICT`.
+- **The icon set is a fixed list of 16 lucide names** in an explicit map, not a
+  dynamic import, so an import file cannot name an icon the UI cannot render.
+
+### Seed file
+
+`supabase/seed/entropable.seed.json` — 6 categories, 37 tasks. It exercises
+6 subtasks across two parents, 7 multi-assignee tasks, cross-category
+dependencies in both directions, all four priorities, three statuses, and
+populated `start_date` / `due_date` / `estimate_hours`. A copy is served at
+`public/example-import.json` for the "Example JSON" download on the import page.
+
+### Verification performed (§9, Phase 2 "done when")
+
+- `preview_import` on the seed reports 37 new tasks, 6 new categories, no errors
+  — and writes nothing.
+- `import_workspace` on the seed creates 37 tasks, 6 categories, 49 dependency
+  edges, 38 assignments, 6 subtasks; member titles and colours are applied.
+- Re-importing the same file reports 0 created / 37 updated, leaves the counts
+  unchanged, and preserves `ML-01`'s in-flight `in_progress` status over the
+  file's value.
+- A 3-task cyclic file aborts the whole import — not even its category is
+  written.
+- A file declaring `done` on a task with an unmet dependency is refused with
+  `Task GATE-02 is declared done but is blocked by: GATE-01`.
+- A non-admin calling `import_workspace` is refused; `mode: "sync"` is refused.
+- 28 Vitest unit tests cover the parser and the cycle detector.

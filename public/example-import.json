@@ -1,0 +1,474 @@
+{
+  "version": 1,
+  "mode": "upsert",
+  "members": [
+    { "email": "abdulmoizzzzzz10@gmail.com", "title": "Lead", "color": "violet", "role": "admin" },
+    { "email": "dev2@example.com", "title": "ML", "color": "emerald" },
+    { "email": "dev3@example.com", "title": "Backend", "color": "blue" }
+  ],
+  "categories": [
+    {
+      "key": "platform",
+      "name": "Platform & Infra",
+      "description": "Databases, queues, CI, deployment and everything the rest stands on.",
+      "color": "slate",
+      "icon": "server",
+      "position": 1
+    },
+    {
+      "key": "ml-pipeline",
+      "name": "ML Signal Pipeline",
+      "description": "Feature store, model training and the signal service.",
+      "color": "violet",
+      "icon": "brain",
+      "position": 2
+    },
+    {
+      "key": "strategy-builder",
+      "name": "Strategy Builder",
+      "description": "The visual strategy composer and its rule engine.",
+      "color": "blue",
+      "icon": "workflow",
+      "position": 3
+    },
+    {
+      "key": "backtesting",
+      "name": "Backtesting Engine",
+      "description": "Walk-forward runs, CPCV and the metrics report.",
+      "color": "cyan",
+      "icon": "activity",
+      "position": 4
+    },
+    {
+      "key": "execution",
+      "name": "Execution & Risk",
+      "description": "Order routing, position sizing and the kill switch.",
+      "color": "amber",
+      "icon": "shield",
+      "position": 5
+    },
+    {
+      "key": "frontend",
+      "name": "Web App & UX",
+      "description": "The customer-facing application.",
+      "color": "emerald",
+      "icon": "globe",
+      "position": 6
+    }
+  ],
+  "tasks": [
+    {
+      "key": "PLT-01",
+      "category": "platform",
+      "title": "Provision Postgres + Redis and wire migrations",
+      "description": "Managed Postgres, Upstash Redis, migration runner in CI.",
+      "note": "Use the shared staging credentials in 1Password, do not create new ones.",
+      "status": "done",
+      "priority": "critical",
+      "assignees": ["abdulmoizzzzzz10@gmail.com"],
+      "depends_on": [],
+      "position": 1,
+      "start_date": "2026-09-01",
+      "due_date": "2026-09-05",
+      "estimate_hours": 8
+    },
+    {
+      "key": "PLT-02",
+      "category": "platform",
+      "title": "CI pipeline: lint, test, migrate, deploy",
+      "status": "done",
+      "priority": "high",
+      "assignees": ["abdulmoizzzzzz10@gmail.com", "dev3@example.com"],
+      "depends_on": ["PLT-01"],
+      "position": 2,
+      "start_date": "2026-09-05",
+      "due_date": "2026-09-09",
+      "estimate_hours": 12
+    },
+    {
+      "key": "PLT-03",
+      "category": "platform",
+      "title": "Observability: structured logs, traces, alerting",
+      "description": "OpenTelemetry traces through the signal path, alerts on queue depth.",
+      "status": "in_progress",
+      "priority": "medium",
+      "assignees": ["dev3@example.com"],
+      "depends_on": ["PLT-01"],
+      "position": 3,
+      "start_date": "2026-09-10",
+      "due_date": "2026-09-18",
+      "estimate_hours": 16
+    },
+    {
+      "key": "PLT-04",
+      "category": "platform",
+      "title": "Secrets management and per-environment config",
+      "priority": "medium",
+      "assignees": ["dev3@example.com"],
+      "depends_on": ["PLT-02"],
+      "position": 4,
+      "estimate_hours": 6
+    },
+    {
+      "key": "PLT-05",
+      "category": "platform",
+      "title": "Load testing harness for the signal service",
+      "priority": "low",
+      "assignees": [],
+      "depends_on": ["PLT-03", "ML-04"],
+      "position": 5,
+      "estimate_hours": 10
+    },
+
+    {
+      "key": "ML-01",
+      "category": "ml-pipeline",
+      "title": "Feature store: 4-stage pipeline scaffold",
+      "description": "Ingestion, normalisation, feature computation, materialisation.",
+      "note": "Stages must be independently replayable — no stage may read another's intermediate state.",
+      "status": "in_progress",
+      "priority": "critical",
+      "assignees": ["dev2@example.com"],
+      "depends_on": ["PLT-02"],
+      "position": 1,
+      "start_date": "2026-09-10",
+      "due_date": "2026-09-30",
+      "estimate_hours": 40
+    },
+    {
+      "key": "ML-01-A",
+      "category": "ml-pipeline",
+      "parent": "ML-01",
+      "title": "Stage 1 — raw OHLCV ingestion",
+      "status": "done",
+      "priority": "high",
+      "assignees": ["dev2@example.com"],
+      "depends_on": [],
+      "position": 1,
+      "estimate_hours": 8
+    },
+    {
+      "key": "ML-01-B",
+      "category": "ml-pipeline",
+      "parent": "ML-01",
+      "title": "Stage 2 — gap filling and normalisation",
+      "status": "in_progress",
+      "priority": "high",
+      "assignees": ["dev2@example.com"],
+      "depends_on": ["ML-01-A"],
+      "position": 2,
+      "estimate_hours": 10
+    },
+    {
+      "key": "ML-01-C",
+      "category": "ml-pipeline",
+      "parent": "ML-01",
+      "title": "Stage 3 — technical and microstructure features",
+      "priority": "high",
+      "assignees": ["dev2@example.com"],
+      "depends_on": ["ML-01-B"],
+      "position": 3,
+      "estimate_hours": 14
+    },
+    {
+      "key": "ML-01-D",
+      "category": "ml-pipeline",
+      "parent": "ML-01",
+      "title": "Stage 4 — materialise to the online store",
+      "priority": "medium",
+      "assignees": ["dev2@example.com", "dev3@example.com"],
+      "depends_on": ["ML-01-C"],
+      "position": 4,
+      "estimate_hours": 8
+    },
+    {
+      "key": "ML-02",
+      "category": "ml-pipeline",
+      "title": "Label construction: triple-barrier method",
+      "note": "Barriers are volatility-scaled. Do not hard-code the horizon.",
+      "priority": "high",
+      "assignees": ["dev2@example.com"],
+      "depends_on": ["ML-01"],
+      "position": 2,
+      "start_date": "2026-10-01",
+      "due_date": "2026-10-08",
+      "estimate_hours": 16
+    },
+    {
+      "key": "ML-03",
+      "category": "ml-pipeline",
+      "title": "Model training loop with purged K-fold CV",
+      "priority": "critical",
+      "assignees": ["dev2@example.com"],
+      "depends_on": ["ML-02"],
+      "position": 3,
+      "estimate_hours": 24
+    },
+    {
+      "key": "ML-04",
+      "category": "ml-pipeline",
+      "title": "Signal service: low-latency inference endpoint",
+      "priority": "high",
+      "assignees": ["dev2@example.com", "dev3@example.com"],
+      "depends_on": ["ML-03", "PLT-04"],
+      "position": 4,
+      "estimate_hours": 20
+    },
+    {
+      "key": "ML-05",
+      "category": "ml-pipeline",
+      "title": "Model registry and rollback procedure",
+      "priority": "medium",
+      "assignees": ["dev2@example.com"],
+      "depends_on": ["ML-03"],
+      "position": 5,
+      "estimate_hours": 10
+    },
+    {
+      "key": "ML-06",
+      "category": "ml-pipeline",
+      "title": "Drift monitoring on live feature distributions",
+      "priority": "low",
+      "assignees": [],
+      "depends_on": ["ML-04", "PLT-03"],
+      "position": 6,
+      "estimate_hours": 12
+    },
+
+    {
+      "key": "SB-01",
+      "category": "strategy-builder",
+      "title": "Rule DSL and JSON schema for a strategy",
+      "description": "The serialised form every other part of the builder reads and writes.",
+      "priority": "critical",
+      "assignees": ["abdulmoizzzzzz10@gmail.com"],
+      "depends_on": ["PLT-02"],
+      "position": 1,
+      "estimate_hours": 18
+    },
+    {
+      "key": "SB-02",
+      "category": "strategy-builder",
+      "title": "Rule evaluation engine",
+      "priority": "high",
+      "assignees": ["dev3@example.com"],
+      "depends_on": ["SB-01"],
+      "position": 2,
+      "estimate_hours": 20
+    },
+    {
+      "key": "SB-02-A",
+      "category": "strategy-builder",
+      "parent": "SB-02",
+      "title": "Indicator resolution and caching",
+      "priority": "medium",
+      "assignees": ["dev3@example.com"],
+      "depends_on": [],
+      "position": 1,
+      "estimate_hours": 8
+    },
+    {
+      "key": "SB-02-B",
+      "category": "strategy-builder",
+      "parent": "SB-02",
+      "title": "Condition tree evaluation with short-circuiting",
+      "priority": "medium",
+      "assignees": ["dev3@example.com"],
+      "depends_on": ["SB-02-A"],
+      "position": 2,
+      "estimate_hours": 10
+    },
+    {
+      "key": "SB-03",
+      "category": "strategy-builder",
+      "title": "Visual composer: drag-and-drop rule canvas",
+      "priority": "high",
+      "assignees": ["abdulmoizzzzzz10@gmail.com"],
+      "depends_on": ["SB-01", "FE-01"],
+      "position": 3,
+      "estimate_hours": 30
+    },
+    {
+      "key": "SB-04",
+      "category": "strategy-builder",
+      "title": "ML signal as a first-class rule input",
+      "priority": "high",
+      "assignees": ["dev2@example.com", "abdulmoizzzzzz10@gmail.com"],
+      "depends_on": ["SB-02", "ML-04"],
+      "position": 4,
+      "estimate_hours": 12
+    },
+    {
+      "key": "SB-05",
+      "category": "strategy-builder",
+      "title": "Strategy versioning and diff view",
+      "priority": "low",
+      "assignees": [],
+      "depends_on": ["SB-03"],
+      "position": 5,
+      "estimate_hours": 14
+    },
+
+    {
+      "key": "BT-01",
+      "category": "backtesting",
+      "title": "Walk-forward runner",
+      "note": "Multi-asset splits must share a single clock. No look-ahead across the split boundary.",
+      "priority": "critical",
+      "assignees": ["dev2@example.com", "abdulmoizzzzzz10@gmail.com"],
+      "depends_on": ["ML-01", "SB-02"],
+      "position": 1,
+      "start_date": "2026-10-12",
+      "due_date": "2026-10-26",
+      "estimate_hours": 32
+    },
+    {
+      "key": "BT-02",
+      "category": "backtesting",
+      "title": "Transaction cost and slippage model",
+      "priority": "high",
+      "assignees": ["dev3@example.com"],
+      "depends_on": ["BT-01"],
+      "position": 2,
+      "estimate_hours": 12
+    },
+    {
+      "key": "BT-03",
+      "category": "backtesting",
+      "title": "Combinatorial purged cross-validation",
+      "priority": "medium",
+      "assignees": ["dev2@example.com"],
+      "depends_on": ["BT-01", "ML-03"],
+      "position": 3,
+      "estimate_hours": 20
+    },
+    {
+      "key": "BT-04",
+      "category": "backtesting",
+      "title": "Metrics report: Sharpe, PSR, drawdown, turnover",
+      "priority": "high",
+      "assignees": ["abdulmoizzzzzz10@gmail.com"],
+      "depends_on": ["BT-02"],
+      "position": 4,
+      "estimate_hours": 16
+    },
+    {
+      "key": "BT-05",
+      "category": "backtesting",
+      "title": "Deflated Sharpe against the strategy search count",
+      "priority": "low",
+      "assignees": ["dev2@example.com"],
+      "depends_on": ["BT-04", "BT-03"],
+      "position": 5,
+      "estimate_hours": 10
+    },
+
+    {
+      "key": "EXE-01",
+      "category": "execution",
+      "title": "Exchange connector: REST + websocket order lifecycle",
+      "priority": "critical",
+      "assignees": ["dev3@example.com"],
+      "depends_on": ["PLT-04"],
+      "position": 1,
+      "start_date": "2026-10-01",
+      "due_date": "2026-10-20",
+      "estimate_hours": 36
+    },
+    {
+      "key": "EXE-02",
+      "category": "execution",
+      "title": "Position sizing from the risk budget",
+      "priority": "high",
+      "assignees": ["abdulmoizzzzzz10@gmail.com"],
+      "depends_on": ["EXE-01", "BT-02"],
+      "position": 2,
+      "estimate_hours": 14
+    },
+    {
+      "key": "EXE-03",
+      "category": "execution",
+      "title": "Kill switch and daily loss limit",
+      "note": "This must work when the rest of the system is down. Assume nothing is healthy.",
+      "priority": "critical",
+      "assignees": ["dev3@example.com", "abdulmoizzzzzz10@gmail.com"],
+      "depends_on": ["EXE-01"],
+      "position": 3,
+      "estimate_hours": 12
+    },
+    {
+      "key": "EXE-04",
+      "category": "execution",
+      "title": "Paper-trading mode sharing the live code path",
+      "priority": "medium",
+      "assignees": ["dev3@example.com"],
+      "depends_on": ["EXE-02", "SB-04"],
+      "position": 4,
+      "estimate_hours": 16
+    },
+    {
+      "key": "EXE-05",
+      "category": "execution",
+      "title": "Reconciliation job against exchange fills",
+      "priority": "medium",
+      "assignees": [],
+      "depends_on": ["EXE-01", "PLT-03"],
+      "position": 5,
+      "estimate_hours": 10
+    },
+
+    {
+      "key": "FE-01",
+      "category": "frontend",
+      "title": "App shell, auth and design system",
+      "status": "in_progress",
+      "priority": "high",
+      "assignees": ["abdulmoizzzzzz10@gmail.com"],
+      "depends_on": ["PLT-02"],
+      "position": 1,
+      "start_date": "2026-09-08",
+      "due_date": "2026-09-22",
+      "estimate_hours": 24
+    },
+    {
+      "key": "FE-02",
+      "category": "frontend",
+      "title": "Backtest report screen",
+      "priority": "high",
+      "assignees": ["abdulmoizzzzzz10@gmail.com"],
+      "depends_on": ["FE-01", "BT-04"],
+      "position": 2,
+      "estimate_hours": 20
+    },
+    {
+      "key": "FE-03",
+      "category": "frontend",
+      "title": "Live portfolio dashboard",
+      "priority": "medium",
+      "assignees": ["abdulmoizzzzzz10@gmail.com", "dev3@example.com"],
+      "depends_on": ["FE-01", "EXE-04"],
+      "position": 3,
+      "estimate_hours": 26
+    },
+    {
+      "key": "FE-04",
+      "category": "frontend",
+      "title": "Onboarding and exchange key connection flow",
+      "priority": "medium",
+      "assignees": [],
+      "depends_on": ["FE-01", "EXE-01"],
+      "position": 4,
+      "estimate_hours": 18
+    },
+    {
+      "key": "FE-05",
+      "category": "frontend",
+      "title": "Accessibility and dark-mode pass",
+      "priority": "low",
+      "assignees": [],
+      "depends_on": ["FE-02", "FE-03"],
+      "position": 5,
+      "estimate_hours": 12
+    }
+  ]
+}
