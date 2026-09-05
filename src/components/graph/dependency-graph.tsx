@@ -211,9 +211,9 @@ function TaskNode({ data }: NodeProps<Node<TaskNodeData>>) {
 
       <div className="flex items-center gap-1">
         {blocked ? <Lock className="size-3 shrink-0" /> : null}
-        <code className="text-[9px] font-bold tracking-wide">{task.key}</code>
+        <code className="text-[10px] font-bold tracking-wide">{task.key}</code>
       </div>
-      <p className="line-clamp-2 text-[11px] leading-tight font-medium">{task.title}</p>
+      <p className="line-clamp-2 text-xs leading-tight font-medium">{task.title}</p>
 
       <Handle type="source" position={Position.Right} className="!size-1.5 !border-0 !bg-current" />
     </div>

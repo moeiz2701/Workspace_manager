@@ -100,9 +100,7 @@ export function NotificationList({
 function Group({ label, items }: { label: string; items: Notification[] }) {
   return (
     <section className="space-y-2">
-      <h2 className="text-muted-foreground text-[11px] font-medium tracking-wide uppercase">
-        {label}
-      </h2>
+      <h2 className="text-eyebrow">{label}</h2>
       <ul className="divide-y rounded-lg border">
         {items.map((n) => (
           <Row key={n.id} n={n} />
@@ -128,7 +126,7 @@ function Row({ n }: { n: Notification }) {
       >
         <div className="truncate text-sm font-medium">{n.title}</div>
         {n.body ? <div className="text-muted-foreground truncate text-xs">{n.body}</div> : null}
-        <div className="text-muted-foreground mt-0.5 text-[11px]">
+        <div className="text-muted-foreground mt-0.5 text-xs">
           {new Date(n.created_at).toLocaleString()}
         </div>
       </Link>

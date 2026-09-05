@@ -142,7 +142,7 @@ export function CommentComposer({
           </Button>
         ) : null}
 
-        <span className="text-muted-foreground ml-auto text-[11px]">⌘↵ to send</span>
+        <span className="text-muted-foreground ml-auto text-xs">⌘↵ to send</span>
       </div>
     </div>
   );

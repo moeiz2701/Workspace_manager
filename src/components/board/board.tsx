@@ -167,14 +167,14 @@ export function Board({
       >
         <div className="flex items-center gap-2">
           <Switch id="swimlanes" checked={swimlanes} onCheckedChange={setSwimlanes} />
-          <Label htmlFor="swimlanes" className="text-xs">
+          <Label htmlFor="swimlanes" className="text-xs font-medium">
             Swimlanes
           </Label>
         </div>
         <Button
           variant={showCancelled ? 'secondary' : 'ghost'}
           size="sm"
-          className="h-8"
+          className="h-9"
           onClick={() => setShowCancelled((v) => !v)}
         >
           Cancelled
@@ -189,15 +189,15 @@ export function Board({
         onDragCancel={() => setDraggingId(null)}
       >
         {swimlanes ? (
-          <div className="space-y-8 p-6">
+          <div className="space-y-10 p-4 md:p-6">
             {categories.map((category) => {
               const lane = visible.filter((t) => t.category_key === category.key);
               if (lane.length === 0) return null;
               return (
-                <section key={category.id} className="space-y-3">
-                  <h2 className="text-sm font-semibold">
+                <section key={category.id} className="space-y-3.5">
+                  <h2 className="flex items-baseline gap-2 text-base font-semibold">
                     {category.name}
-                    <span className="text-muted-foreground ml-2 text-xs font-normal tabular-nums">
+                    <span className="text-muted-foreground text-xs font-medium tabular-nums">
                       {lane.length}
                     </span>
                   </h2>
@@ -213,7 +213,7 @@ export function Board({
             })}
           </div>
         ) : (
-          <div className="p-6">
+          <div className="p-4 md:p-6">
             <Columns columns={columns} tasks={visible} onOpen={openSheet} />
           </div>
         )}

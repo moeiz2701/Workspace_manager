@@ -22,7 +22,7 @@ export function ActivityTimeline({
 
   return (
     <section className="space-y-3">
-      <h2 className="text-muted-foreground flex items-center gap-2 text-[11px] font-medium tracking-wide uppercase">
+      <h2 className="text-eyebrow flex items-center gap-2">
         <History className="size-3.5" />
         Activity
       </h2>
@@ -43,7 +43,7 @@ export function ActivityTimeline({
                 {entry.actor?.full_name ?? entry.actor?.email ?? 'The system'}
               </span>{' '}
               <span className="text-muted-foreground">{describe(entry, names)}</span>
-              <time className="text-muted-foreground ml-1.5 text-[11px] whitespace-nowrap">
+              <time className="text-muted-foreground ml-1.5 text-xs whitespace-nowrap">
                 · {format(new Date(entry.created_at), 'd MMM, HH:mm')}
               </time>
             </p>

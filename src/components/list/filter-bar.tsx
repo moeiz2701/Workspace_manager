@@ -47,16 +47,19 @@ export function FilterBar({
   const active = countActiveFilters(filters);
 
   return (
-    <div className="flex flex-wrap items-center gap-2 border-b px-6 py-3">
+    <div className="bg-background/85 supports-[backdrop-filter]:bg-background/70 sticky top-16 z-20 flex flex-wrap items-center gap-2 border-b px-4 py-3 backdrop-blur-md md:px-6">
       <div className="relative min-w-48 flex-1 sm:max-w-72">
-        <Search className="text-muted-foreground pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2" />
+        <Search className="text-muted-foreground pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2" />
         <Input
           data-search-input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search tasks…  /"
-          className="h-8 pl-8"
+          placeholder="Search tasks…"
+          className="h-9 pr-9 pl-9"
         />
+        <kbd className="border-border/70 text-muted-foreground pointer-events-none absolute top-1/2 right-2.5 hidden -translate-y-1/2 rounded border px-1.5 py-px text-[10px] leading-4 font-medium sm:block">
+          /
+        </kbd>
       </div>
 
       <MultiSelect
@@ -94,7 +97,7 @@ export function FilterBar({
       <Button
         variant={filters.onlyMine ? 'default' : 'outline'}
         size="sm"
-        className="h-8"
+        className="h-9"
         onClick={() => patch({ onlyMine: !filters.onlyMine })}
       >
         {filters.onlyMine ? <Check className="size-3.5" /> : null}
@@ -104,7 +107,7 @@ export function FilterBar({
       <Button
         variant={filters.hideBlocked ? 'default' : 'outline'}
         size="sm"
-        className="h-8"
+        className="h-9"
         onClick={() => patch({ hideBlocked: !filters.hideBlocked })}
       >
         {filters.hideBlocked ? <Check className="size-3.5" /> : null}
@@ -112,16 +115,16 @@ export function FilterBar({
       </Button>
 
       {active > 0 ? (
-        <Button variant="ghost" size="sm" className="h-8" onClick={() => setFilters(EMPTY_FILTERS)}>
+        <Button variant="ghost" size="sm" className="h-9" onClick={() => setFilters(EMPTY_FILTERS)}>
           <X className="size-3.5" /> Clear
-          <Badge variant="secondary" className="ml-1">
+          <Badge variant="secondary" className="ml-1 tabular-nums">
             {active}
           </Badge>
         </Button>
       ) : null}
 
       <div className="ml-auto flex items-center gap-3">
-        <span className="text-muted-foreground text-xs tabular-nums">
+        <span className="text-muted-foreground text-xs font-medium tabular-nums">
           {resultCount === totalCount ? `${totalCount} tasks` : `${resultCount} of ${totalCount}`}
         </span>
         {children}
@@ -146,7 +149,7 @@ function MultiSelect({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="sm" className="h-8">
+        <Button variant="outline" size="sm" className="h-9">
           <SlidersHorizontal className="size-3.5" />
           {label}
           {count > 0 ? (

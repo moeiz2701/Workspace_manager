@@ -9,9 +9,7 @@ export function PersonProgressList({ people }: { people: PersonProgress[] }) {
 
   return (
     <section className="space-y-3">
-      <h2 className="text-muted-foreground text-[11px] font-medium tracking-wide uppercase">
-        By person
-      </h2>
+      <h2 className="text-eyebrow">By person</h2>
 
       <ul className="divide-y rounded-lg border">
         {sorted.map((person) => {

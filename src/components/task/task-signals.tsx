@@ -30,10 +30,10 @@ export function StatusIcon({
   className?: string;
 }) {
   if (isBlocked && status === 'todo') {
-    return <Lock className={cn('size-3.5 shrink-0', className)} aria-label="Blocked" />;
+    return <Lock className={cn('size-4 shrink-0', className)} aria-label="Blocked" />;
   }
   const Icon = STATUS_ICONS[status];
-  return <Icon className={cn('size-3.5 shrink-0', className)} aria-label={STATUS_LABELS[status]} />;
+  return <Icon className={cn('size-4 shrink-0', className)} aria-label={STATUS_LABELS[status]} />;
 }
 
 export function CategoryChip({
@@ -48,7 +48,7 @@ export function CategoryChip({
   return (
     <span
       className={cn(
-        'inline-flex items-center rounded px-1.5 py-0.5 text-[10px] font-medium',
+        'inline-flex items-center rounded-md px-1.5 py-0.5 text-xs leading-4 font-medium',
         colorOf(color).chip,
         className,
       )}
@@ -66,7 +66,7 @@ export function PriorityMark({ priority }: { priority: TaskPriority }) {
   if (priority === 'low') {
     return (
       <span title="Low priority" className="text-muted-foreground inline-flex items-center">
-        <Minus className="size-3" />
+        <Minus className="size-3.5" />
       </span>
     );
   }
@@ -76,14 +76,14 @@ export function PriorityMark({ priority }: { priority: TaskPriority }) {
     <span
       title={priority === 'critical' ? 'Critical' : 'High priority'}
       className={cn(
-        'inline-flex items-center rounded px-1 text-[10px] font-bold',
+        'inline-flex items-center gap-0.5 rounded-md px-1.5 py-0.5 text-xs leading-4 font-semibold',
         priority === 'critical'
           ? 'bg-rose-500/15 text-rose-700 dark:text-rose-300'
-          : 'bg-orange-500/15 text-orange-700 dark:text-orange-300',
+          : 'bg-orange-500/15 text-orange-800 dark:text-orange-300',
       )}
     >
-      {priority === 'critical' ? '!' : '↑'}
-      <span className="ml-0.5">{priority === 'critical' ? 'Critical' : 'High'}</span>
+      <span aria-hidden>{priority === 'critical' ? '!' : '↑'}</span>
+      {priority === 'critical' ? 'Critical' : 'High'}
     </span>
   );
 }
@@ -107,10 +107,10 @@ export function BlockedChip({ blockers }: { blockers: string[] }) {
   return (
     <span
       title={`Blocked by ${blockers.join(', ')}`}
-      className="inline-flex items-center gap-1 rounded border border-dashed px-1.5 py-0.5 text-[10px] font-medium"
+      className="text-foreground/80 inline-flex items-center gap-1 rounded-md border border-dashed px-1.5 py-0.5 text-xs leading-4 font-medium"
     >
       <Lock className="size-3" />
-      {blockers.join(', ')}
+      <code className="font-semibold">{blockers.join(', ')}</code>
     </span>
   );
 }

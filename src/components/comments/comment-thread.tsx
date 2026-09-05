@@ -50,7 +50,7 @@ export function CommentThread({
 
   return (
     <section className="space-y-4">
-      <h2 className="text-muted-foreground flex items-center gap-2 text-[11px] font-medium tracking-wide uppercase">
+      <h2 className="text-eyebrow flex items-center gap-2">
         <MessageSquare className="size-3.5" />
         Comments
         {comments.length > 0 ? <span className="tabular-nums">{comments.length}</span> : null}
@@ -123,11 +123,11 @@ function CommentRow({
             <span className="text-sm font-medium">
               {comment.author?.full_name ?? comment.author?.email ?? 'Unknown'}
             </span>
-            <time className="text-muted-foreground text-[11px]">
+            <time className="text-muted-foreground text-xs">
               {format(new Date(comment.created_at), 'd MMM, HH:mm')}
             </time>
             {comment.edited_at ? (
-              <span className="text-muted-foreground text-[11px]">edited</span>
+              <span className="text-muted-foreground text-xs">edited</span>
             ) : null}
           </div>
 

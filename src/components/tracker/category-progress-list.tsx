@@ -8,9 +8,7 @@ import type { CategoryProgress } from '@/types/app';
 export function CategoryProgressList({ categories }: { categories: CategoryProgress[] }) {
   return (
     <section className="space-y-3">
-      <h2 className="text-muted-foreground text-[11px] font-medium tracking-wide uppercase">
-        By category
-      </h2>
+      <h2 className="text-eyebrow">By category</h2>
 
       <ul className="space-y-3">
         {categories.map((category) => {
@@ -62,7 +60,7 @@ export function CategoryProgressList({ categories }: { categories: CategoryProgr
         ) : null}
       </ul>
 
-      <div className="text-muted-foreground flex gap-4 text-[11px]">
+      <div className="text-muted-foreground flex gap-4 text-xs">
         <Legend className="bg-emerald-500" label="Done" />
         <Legend className="bg-blue-500" label="In flight" />
         <Legend className="bg-muted-foreground/25" label="To do" />

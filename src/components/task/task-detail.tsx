@@ -109,9 +109,7 @@ export function TaskDetail({
 
       {task.description ? (
         <section className="space-y-2">
-          <h2 className="text-muted-foreground text-[11px] font-medium tracking-wide uppercase">
-            Description
-          </h2>
+          <h2 className="text-eyebrow">Description</h2>
           <p className="text-sm whitespace-pre-wrap">{task.description}</p>
         </section>
       ) : null}
@@ -147,7 +145,7 @@ export function TaskDetail({
 
       {children.length > 0 ? (
         <section className="space-y-2">
-          <h2 className="text-muted-foreground text-[11px] font-medium tracking-wide uppercase">
+          <h2 className="text-eyebrow">
             Subtasks · {task.child_done_count}/{task.child_count} done
           </h2>
           <ul className="divide-y rounded-lg border">
@@ -179,7 +177,7 @@ function TaskRow({ task }: { task: Task }) {
         href={`/tasks/${task.key}`}
         className={cn('min-w-0 flex-1 truncate hover:underline', blocked && 'opacity-70')}
       >
-        <code className="text-muted-foreground mr-2 text-[10px] font-semibold">{task.key}</code>
+        <code className="text-muted-foreground mr-2 text-xs font-semibold">{task.key}</code>
         {task.title}
       </Link>
       <span className="text-muted-foreground shrink-0 text-xs">{STATUS_LABELS[task.status]}</span>
@@ -214,9 +212,7 @@ function Assignees({ task, team, isAdmin }: { task: Task; team: Profile[]; isAdm
 
   return (
     <section className="space-y-2">
-      <h2 className="text-muted-foreground text-[11px] font-medium tracking-wide uppercase">
-        Assignees
-      </h2>
+      <h2 className="text-eyebrow">Assignees</h2>
 
       <div className="flex flex-wrap items-center gap-2">
         {task.assignees.length === 0 ? (
@@ -309,9 +305,7 @@ function DependencyPanel({
 
   return (
     <section className="space-y-2">
-      <h2 className="text-muted-foreground text-[11px] font-medium tracking-wide uppercase">
-        {title}
-      </h2>
+      <h2 className="text-eyebrow">{title}</h2>
 
       {tasks.length === 0 ? (
         <p className="text-muted-foreground text-sm">None.</p>
@@ -328,14 +322,12 @@ function DependencyPanel({
                 )}
               />
               <Link href={`/tasks/${dep.key}`} className="min-w-0 flex-1 truncate hover:underline">
-                <code className="text-muted-foreground mr-2 text-[10px] font-semibold">
-                  {dep.key}
-                </code>
+                <code className="text-muted-foreground mr-2 text-xs font-semibold">{dep.key}</code>
                 {dep.title}
               </Link>
               <span
                 className={cn(
-                  'shrink-0 rounded px-1.5 py-0.5 text-[10px]',
+                  'shrink-0 rounded px-1.5 py-0.5 text-xs',
                   dep.status === 'done'
                     ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300'
                     : 'bg-muted text-muted-foreground',
@@ -380,7 +372,7 @@ function DependencyPanel({
                       value={`${option.key} ${option.title}`}
                       onSelect={() => run(() => onAdd.run(option))}
                     >
-                      <code className="text-muted-foreground text-[10px] font-semibold">
+                      <code className="text-muted-foreground text-xs font-semibold">
                         {option.key}
                       </code>
                       <span className="truncate">{option.title}</span>

@@ -29,17 +29,19 @@ export function BoardColumn({
     <section
       ref={setNodeRef}
       className={cn(
-        'bg-muted/40 flex min-h-40 flex-col gap-2 rounded-lg border p-2 transition-colors',
-        isOver && 'border-foreground/40 bg-accent/60',
+        'bg-muted/50 flex min-h-40 flex-col gap-2.5 rounded-xl border p-2.5 transition-colors',
+        isOver && 'border-primary/50 bg-accent/70 ring-primary/20 ring-2',
       )}
     >
-      <header className="flex items-center gap-2 px-1 py-0.5">
+      <header className="flex items-center gap-2 px-1 pt-0.5 pb-1">
         <StatusIcon status={status as TaskStatus} className="text-muted-foreground" />
-        <h3 className="text-xs font-semibold tracking-wide uppercase">{label}</h3>
-        <span className="text-muted-foreground ml-auto text-xs tabular-nums">{tasks.length}</span>
+        <h3 className="text-eyebrow text-foreground">{label}</h3>
+        <span className="bg-background text-muted-foreground ml-auto rounded-md px-1.5 py-0.5 text-xs font-semibold tabular-nums">
+          {tasks.length}
+        </span>
       </header>
 
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2.5">
         {tasks.map((task) => (
           <DraggableCard
             key={task.id}
@@ -50,7 +52,7 @@ export function BoardColumn({
         ))}
 
         {tasks.length === 0 ? (
-          <p className="text-muted-foreground/70 px-1 py-6 text-center text-xs">Nothing here</p>
+          <p className="text-muted-foreground/80 px-1 py-8 text-center text-xs">Nothing here</p>
         ) : null}
       </div>
     </section>

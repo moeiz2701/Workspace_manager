@@ -90,7 +90,9 @@ export function TaskTable({
         accessorKey: 'key',
         header: 'Key',
         cell: ({ row }) => (
-          <code className="text-xs font-semibold whitespace-nowrap">{row.original.key}</code>
+          <code className="text-muted-foreground text-xs font-semibold whitespace-nowrap">
+            {row.original.key}
+          </code>
         ),
       },
       {
@@ -125,9 +127,9 @@ export function TaskTable({
               isBlocked={row.original.is_blocked}
               className="text-muted-foreground"
             />
-            <span className="truncate">{row.original.title}</span>
+            <span className="truncate font-medium">{row.original.title}</span>
             {row.original.child_count > 0 ? (
-              <span className="text-muted-foreground shrink-0 text-[10px] tabular-nums">
+              <span className="text-muted-foreground bg-muted shrink-0 rounded px-1.5 py-0.5 text-xs tabular-nums">
                 {row.original.child_done_count}/{row.original.child_count}
               </span>
             ) : null}
@@ -150,7 +152,7 @@ export function TaskTable({
         accessorKey: 'status',
         header: 'Status',
         cell: ({ row }) => (
-          <span className="text-xs whitespace-nowrap">{STATUS_LABELS[row.original.status]}</span>
+          <span className="text-sm whitespace-nowrap">{STATUS_LABELS[row.original.status]}</span>
         ),
       },
       {
@@ -166,14 +168,14 @@ export function TaskTable({
           row.original.is_blocked ? (
             <BlockedChip blockers={row.original.blocked_by_keys} />
           ) : (
-            <span className="text-muted-foreground text-xs">—</span>
+            <span className="text-muted-foreground/60 text-sm">—</span>
           ),
       },
       {
         accessorKey: 'updated_at',
         header: 'Updated',
         cell: ({ row }) => (
-          <span className="text-muted-foreground text-xs whitespace-nowrap">
+          <span className="text-muted-foreground text-xs whitespace-nowrap tabular-nums">
             {formatDistanceToNow(new Date(row.original.updated_at))} ago
           </span>
         ),
@@ -213,16 +215,16 @@ export function TaskTable({
 
       <div className="overflow-x-auto">
         <Table>
-          <TableHeader>
+          <TableHeader className="bg-muted/40">
             {table.getHeaderGroups().map((group) => (
-              <TableRow key={group.id}>
+              <TableRow key={group.id} className="hover:bg-transparent">
                 {group.headers.map((header) => (
-                  <TableHead key={header.id}>
+                  <TableHead key={header.id} className="h-11 px-3">
                     {header.isPlaceholder ? null : (
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="-ml-2 h-7 px-2"
+                        className="text-muted-foreground hover:text-foreground -ml-2 h-7 px-2 text-xs font-semibold tracking-wide uppercase"
                         onClick={header.column.getToggleSortingHandler()}
                       >
                         {flexRender(header.column.columnDef.header, header.getContext())}
@@ -250,12 +252,12 @@ export function TaskTable({
                 key={row.id}
                 onClick={() => setOpen(row.original.key)}
                 className={cn(
-                  'cursor-pointer',
-                  row.original.is_blocked && row.original.status === 'todo' && 'opacity-70',
+                  'hover:bg-accent/40 cursor-pointer',
+                  row.original.is_blocked && row.original.status === 'todo' && 'opacity-75',
                 )}
               >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
+                  <TableCell key={cell.id} className="px-3 py-2.5">
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}

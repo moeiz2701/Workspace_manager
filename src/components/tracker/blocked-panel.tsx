@@ -44,9 +44,7 @@ export function BlockedPanel({
   if (blocked.length === 0) {
     return (
       <section className="space-y-3">
-        <h2 className="text-muted-foreground text-[11px] font-medium tracking-wide uppercase">
-          Blocked right now
-        </h2>
+        <h2 className="text-eyebrow">Blocked right now</h2>
         <p className="text-muted-foreground rounded-lg border border-dashed p-6 text-center text-sm">
           Nothing is blocked. Every task with dependencies has them satisfied.
         </p>
@@ -56,9 +54,7 @@ export function BlockedPanel({
 
   return (
     <section className="space-y-3">
-      <h2 className="text-muted-foreground text-[11px] font-medium tracking-wide uppercase">
-        Blocked right now · {blocked.length}
-      </h2>
+      <h2 className="text-eyebrow">Blocked right now · {blocked.length}</h2>
 
       <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
         <ul className="divide-y rounded-lg border">
@@ -66,9 +62,7 @@ export function BlockedPanel({
             <li key={task.id} className="flex flex-wrap items-center gap-2 p-3 text-sm">
               <StatusIcon status={task.status} isBlocked className="text-muted-foreground" />
               <Link href={`/tasks/${task.key}`} className="min-w-0 flex-1 truncate hover:underline">
-                <code className="text-muted-foreground mr-2 text-[10px] font-semibold">
-                  {task.key}
-                </code>
+                <code className="text-muted-foreground mr-2 text-xs font-semibold">{task.key}</code>
                 {task.title}
               </Link>
               <CategoryChip name={task.category_name} color={task.category_color} />
@@ -98,21 +92,21 @@ export function BlockedPanel({
                   href={`/tasks/${task.key}`}
                   className="min-w-0 flex-1 truncate hover:underline"
                 >
-                  <code className="text-muted-foreground mr-1.5 text-[10px] font-semibold">
+                  <code className="text-muted-foreground mr-1.5 text-xs font-semibold">
                     {task.key}
                   </code>
                   {task.title}
                 </Link>
                 <span
                   title={`Finishing this unblocks ${count} task${count === 1 ? '' : 's'}`}
-                  className="bg-muted shrink-0 rounded px-1.5 py-0.5 text-[10px] font-semibold tabular-nums"
+                  className="bg-muted shrink-0 rounded px-1.5 py-0.5 text-xs font-semibold tabular-nums"
                 >
                   +{count}
                 </span>
               </li>
             ))}
           </ul>
-          <p className="text-muted-foreground text-[11px]">
+          <p className="text-muted-foreground text-xs">
             The number is how many blocked tasks each one is holding up. {edges.length} dependency
             edges in total.
           </p>
