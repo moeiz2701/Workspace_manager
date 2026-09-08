@@ -43,8 +43,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.variable} ${jetbrainsMono.variable} antialiased`}>
+    /*
+     * The font variables MUST sit on <html>, not <body>. Custom properties only
+     * inherit downward, and globals.css applies `font-sans` to the html element
+     * — with the variables one level below, `var(--font-inter)` was undefined at
+     * the element that consumes it, which makes the whole font-family
+     * declaration invalid at computed-value time and drops the page to the
+     * browser's default serif. next-themes only classList.add/remove's its own
+     * theme names here, so these classes survive a theme change.
+     */
+    <html
+      lang="en"
+      className={`${inter.variable} ${jetbrainsMono.variable}`}
+      suppressHydrationWarning
+    >
+      <body className="antialiased">
         <Providers>
           {children}
           <Toaster richColors closeButton position="bottom-right" />
