@@ -29,7 +29,7 @@ export async function requireApprovedProfile(): Promise<Profile> {
 
 export async function requireAdminProfile(): Promise<Profile> {
   const profile = await requireApprovedProfile();
-  if (profile.role !== 'admin') redirect('/board');
+  if (profile.role !== 'admin') redirect('/start');
   return profile;
 }
 

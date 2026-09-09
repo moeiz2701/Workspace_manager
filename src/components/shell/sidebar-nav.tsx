@@ -8,6 +8,7 @@ import {
   LayoutGrid,
   ListChecks,
   Shapes,
+  Sparkles,
   Target,
   Upload,
   Users,
@@ -20,6 +21,7 @@ import { cn } from '@/lib/utils';
 type NavItem = { href: string; label: string; icon: LucideIcon; key?: string };
 
 const MAIN: NavItem[] = [
+  { href: '/start', label: 'Start', icon: Sparkles, key: 'S' },
   { href: '/board', label: 'Board', icon: LayoutGrid, key: 'B' },
   { href: '/tasks', label: 'Tasks', icon: ListChecks, key: 'L' },
   { href: '/graph', label: 'Graph', icon: GitBranch, key: 'G' },
@@ -164,7 +166,7 @@ export function SidebarBrand({
 }) {
   return (
     <Link
-      href="/board"
+      href="/start"
       onClick={onNavigate}
       className={cn(
         'group flex items-center rounded-lg transition-colors',

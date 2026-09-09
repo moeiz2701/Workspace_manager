@@ -97,6 +97,11 @@ export type TaskView = {
   status: TaskStatus;
   priority: TaskPriority;
   position: number;
+  /**
+   * Delivery phase, 1-based. Derived from a `P<n>-` key prefix by a trigger
+   * (migration 0010); null on plans that do not use phases, which sort last.
+   */
+  phase: number | null;
   start_date: string | null;
   due_date: string | null;
   estimate_hours: number | null;

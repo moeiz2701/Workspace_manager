@@ -16,7 +16,7 @@ function isPublic(pathname: string) {
  *   no session          -> /login
  *   session + pending   -> /pending
  *   session + approved  -> through
- *   non-admin -> /admin/* -> /board
+ *   non-admin -> /admin/* -> /start
  *
  * The redirects here are convenience, not security: RLS is what actually stops
  * a pending user from reading anything (§2, rule 1).
@@ -80,11 +80,11 @@ export async function updateSession(request: NextRequest) {
   }
 
   // Approved users have no business on /login or /pending.
-  if (pathname === '/login' || pathname === '/pending') return redirect('/board');
+  if (pathname === '/login' || pathname === '/pending') return redirect('/start');
 
-  if (pathname.startsWith('/admin') && !isAdmin) return redirect('/board');
+  if (pathname.startsWith('/admin') && !isAdmin) return redirect('/start');
 
-  if (pathname === '/') return redirect('/board');
+  if (pathname === '/') return redirect('/start');
 
   return response;
 }

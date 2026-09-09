@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 /**
- * Global shortcuts (§7.3): `/` focuses search, `b`/`l`/`g`/`t` jump to views.
+ * Global shortcuts (§7.3): `/` focuses search, `s`/`b`/`l`/`g`/`t` jump to views.
  * `j`/`k` and `Esc` are handled by the views that own a selection.
  */
 export function KeyboardShortcuts({ isAdmin }: { isAdmin: boolean }) {
@@ -35,6 +35,7 @@ export function KeyboardShortcuts({ isAdmin }: { isAdmin: boolean }) {
       if (typing) return;
 
       const routes: Record<string, string> = {
+        s: '/start',
         b: '/board',
         l: '/tasks',
         g: '/graph',
